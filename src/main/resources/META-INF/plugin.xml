@@ -1,0 +1,39 @@
+<!-- Plugin Configuration File. See https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
+<idea-plugin>
+    <id>nl.rekaz.faaah</id>
+    <name>FAAAH Test Sound Player</name>
+    <description>FAAAH plays customizable sounds when your test suites pass or fail</description>
+    <vendor>rekaz</vendor>
+
+    <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.modules.java</depends>
+
+    <resource-bundle>messages.bundle</resource-bundle>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <testStatusListener implementation="nl.rekaz.faaah.TestFailureSoundListener"/>
+    </extensions>
+
+    <actions>
+        <action id="nl.rekaz.faaah.PlayTestFailureSoundAction"
+                class="nl.rekaz.faaah.PlayTestFailureSoundAction">
+            <add-to-group group-id="ToolsMenu" anchor="last"/>
+        </action>
+        <action id="nl.rekaz.faaah.PlayTestSuccessSoundAction"
+                class="nl.rekaz.faaah.PlayTestSuccessSoundAction">
+            <add-to-group group-id="ToolsMenu" anchor="last"/>
+        </action>
+        <action id="nl.rekaz.faaah.AdjustVolumeAction"
+                class="nl.rekaz.faaah.AdjustVolumeAction">
+            <add-to-group group-id="ToolsMenu" anchor="last"/>
+        </action>
+        <action id="nl.rekaz.faaah.ToggleTestFailSoundAction"
+                class="nl.rekaz.faaah.ToggleTestFailSoundAction">
+            <add-to-group group-id="ToolsMenu" anchor="last"/>
+        </action>
+        <action id="nl.rekaz.faaah.ToggleSoundSuccessSoundAction"
+                class="nl.rekaz.faaah.ToggleSoundSuccessSoundAction">
+            <add-to-group group-id="ToolsMenu" anchor="last"/>
+        </action>
+    </actions>
+</idea-plugin>
