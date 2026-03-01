@@ -85,7 +85,7 @@ private class SoundConfigTab(private val type: String, initialSettings: SoundSet
 
         customPathField.addBrowseFolderListener(
             null,
-            FileChooserDescriptorFactory.createSingleFileDescriptor().withTitle(SoundBundle.message("dialog.configure.sounds.mode.custom"))
+            FileChooserDescriptorFactory.singleFile().withTitle(SoundBundle.message("dialog.configure.sounds.mode.custom"))
         )
 
         updateVisibility()

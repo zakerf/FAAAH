@@ -9,5 +9,5 @@ Plays sounds when tests pass or fail.
 
 ### Actions (Tools Menu)
 - **Configure Test Sounds...**: Settings for volume and files.
-- **Enable Failure Sound**: Toggle failure sound.
-- **Enable Success Sound**: Toggle success sound.
+- **Enable Test Failure Sound**: Toggle failure sound.
+- **Enable Test Success Sound**: Toggle success sound.
