@@ -24,9 +24,9 @@ object TestFailureSoundPlayer {
         play(settings.soundPath, settings.volume)
     }
 
-    fun play(path: String?, volume: Float) {
-        try {
-            val resourceStream = getInputStream(path) ?: return
+    fun play(path: String?, volume: Float): Boolean {
+        return try {
+            val resourceStream = getInputStream(path) ?: return false
             val audioInputStream = AudioSystem.getAudioInputStream(BufferedInputStream(resourceStream))
             val clip = AudioSystem.getClip()
             clip.open(audioInputStream)
@@ -38,8 +38,10 @@ object TestFailureSoundPlayer {
             }
 
             clip.start()
+            true
         } catch (e: Exception) {
             LOG.error(SoundBundle.message("error.failed.to.play.sound"), e)
+            false
         }
     }
 
@@ -81,13 +83,12 @@ object TestFailureSoundPlayer {
         return when (folder) {
             "fail" -> mapOf(
                 "FAAAH" to "fail/faaah.wav",
-                "Bomboclaat" to "fail/bomboclaat.wav",
-                "Emotional Damage" to "fail/emotional-damage-meme.wav",
-                "Nemesis" to "fail/tf_nemesis.wav",
-                "Vine Boom" to "fail/vine-boom.wav"
+                "FUCK" to "fail/fuck.wav",
+                "BOOM" to "fail/vine-boom.wav"
             )
             "pass" -> mapOf(
-                "Yeah Boy" to "pass/yeah-boymp4.wav"
+                "Yeah boiii" to "pass/yeah-boy.wav",
+                "✨WOW✨" to "pass/anime-wow.wav"
             )
             else -> emptyMap()
         }

@@ -7,6 +7,7 @@ import com.intellij.openapi.actionSystem.ToggleAction
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory
 import com.intellij.openapi.ui.ComboBox
 import com.intellij.openapi.ui.DialogWrapper
+import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.ui.TextFieldWithBrowseButton
 import com.intellij.openapi.ui.ValidationInfo
 import com.intellij.ui.components.JBCheckBox
@@ -15,6 +16,7 @@ import com.intellij.ui.components.JBTabbedPane
 import com.intellij.util.ui.FormBuilder
 import java.awt.BorderLayout
 import java.awt.FlowLayout
+import java.awt.event.ActionListener
 import javax.swing.*
 
 class AdjustVolumeAction : AnAction() {
@@ -64,6 +66,8 @@ private class SoundConfigTab(private val type: String, initialSettings: SoundSet
     private val defaultSoundsMap = TestFailureSoundPlayer.getDefaultSounds(type)
     private val defaultList = ComboBox(defaultSoundsMap.keys.toTypedArray())
     private val customPathField = TextFieldWithBrowseButton()
+    private var verificationPerformed = false
+    private var verificationSuccessful = false
 
     private val defaultPanel = JPanel(BorderLayout())
     private val customPanel = JPanel(BorderLayout())
@@ -87,6 +91,22 @@ private class SoundConfigTab(private val type: String, initialSettings: SoundSet
             null,
             FileChooserDescriptorFactory.singleFile().withTitle(SoundBundle.message("dialog.configure.sounds.mode.custom"))
         )
+        
+        customPathField.textField.addActionListener { 
+            verificationPerformed = false
+            verificationSuccessful = false
+        }
+        
+        customPathField.textField.document.addDocumentListener(object : javax.swing.event.DocumentListener {
+            override fun insertUpdate(e: javax.swing.event.DocumentEvent?) { resetVerification() }
+            override fun removeUpdate(e: javax.swing.event.DocumentEvent?) { resetVerification() }
+            override fun changedUpdate(e: javax.swing.event.DocumentEvent?) { resetVerification() }
+            
+            private fun resetVerification() {
+                verificationPerformed = false
+                verificationSuccessful = false
+            }
+        })
 
         updateVisibility()
         defaultRadio.addActionListener { updateVisibility() }
@@ -106,7 +126,14 @@ private class SoundConfigTab(private val type: String, initialSettings: SoundSet
 
         val verifyButton = JButton(SoundBundle.message("dialog.configure.sounds.verify"))
         verifyButton.addActionListener {
-            TestFailureSoundPlayer.play(getSoundPath(), getVolume())
+            verificationPerformed = true
+            verificationSuccessful = TestFailureSoundPlayer.play(getSoundPath(), getVolume())
+            if (!verificationSuccessful) {
+                Messages.showErrorDialog(
+                    SoundBundle.message("error.failed.to.play.sound"),
+                    SoundBundle.message("dialog.configure.sounds.title")
+                )
+            }
         }
         val verifyPanel = JPanel(FlowLayout(FlowLayout.LEFT))
         verifyPanel.add(verifyButton)
@@ -133,7 +160,10 @@ private class SoundConfigTab(private val type: String, initialSettings: SoundSet
     fun validate(): ValidationInfo? {
         if (customRadio.isSelected) {
             val path = customPathField.text
-            if (path.isEmpty() || !TestFailureSoundPlayer.isValidSoundFile(path)) {
+            if (path.isEmpty()) {
+                return ValidationInfo(SoundBundle.message("dialog.configure.sounds.invalid.file"), customPathField)
+            }
+            if (!TestFailureSoundPlayer.isValidSoundFile(path)) {
                 return ValidationInfo(SoundBundle.message("dialog.configure.sounds.invalid.file"), customPathField)
             }
         }

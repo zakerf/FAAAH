@@ -10,7 +10,7 @@ import com.intellij.openapi.components.*
 class SoundSettings : PersistentStateComponent<SoundSettings.State> {
     class State {
         var failureSettings: SoundConfig = SoundConfig(true, 1.0f, "fail/faaah.wav")
-        var successSettings: SoundConfig = SoundConfig(true, 1.0f, "pass/yeah-boymp4.wav")
+        var successSettings: SoundConfig = SoundConfig(true, 1.0f, "pass/yeah-boy.wav")
     }
 
     data class SoundConfig(
