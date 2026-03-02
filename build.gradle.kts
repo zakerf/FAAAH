@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "nl.rekaz"
-version = "1.0.2"
+version = "1.0.3"
 
 repositories {
     mavenCentral()
@@ -30,6 +30,16 @@ intellijPlatform {
         description = "FAAAH plays customizable sounds when your test suites pass or fail"
         vendor {
             name = "rekaz"
+        }
+        ideaVersion {
+            sinceBuild = "253.1"
+            untilBuild = "253.*"
+        }
+    }
+
+    pluginVerification {
+        ides {
+            recommended()
         }
     }
 }
